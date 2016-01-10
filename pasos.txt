@@ -1,0 +1,66 @@
+Tema 2. Esqueleto del proyecto con express-generator
+--------------------------------------------------------
+
+Si al ejecutar "node_modules/express-generator/bin/express --help" produce como salida "/usr/bin/env: node: No such file or directory", ejecutar el siguiente comando:
+> sudo apt-get install nodejs-legacy
+
+Crear el fichero .gitignore en el directorio quiz:
+> cd quiz
+> touch .gitignore
+
+
+EJS: Embbeded JavaScript
+
+
+<% código %> --> solo representa codigo en javascript
+<%= expresion  %> --> evalua la expresion y la muestra en la vista html
+<% include path_a_fichero %> --> es como incluir el contenido del fichero en el fichero actual.
+
+
+1. Entras en app.js, que te redirige al index.js siempre que introduzcas la URL con '/'
+2. Una vez en index.js, se te redirige a la funcion correspondiente, dependiendo de la URL que te hayan introducido
+
+
+El marco de la aplcacion nos permite tener un layout por defecto, y solo tenenemos que cambiar en las vistas parciales la parte section.
+
+La instalacion de express-partials hay que hacerla estando dentro de la carpeta quiz.
+
+Una vista se puede meter dentro de una anotacion de EJS <%- body %>
+
+
+En css, "*			{margin: 0; padding: 0;}" resetea todo el formato que puedan traer los navegadores a cero.
+h2 span, section h3		{display: none;} --> no muestra los elementos h2 span, section h3
+
+Renombrar app en Heroku (no puede haber nombres repetidos de apps):
+
+> heroku apps:rename asg-quiz-2015 --app enigmatic-wave-9319
+
+Abrir aplicacion Heroku:
+> heroku open --app asg-quiz-2015
+
+Create a new Git repository
+
+Initialize a git repository in a new or existing directory
+
+$ cd my-project/
+$ git init
+$ heroku git:remote -a asg-quiz-2015
+
+
+
+Un ORM es un modulo que crea instrucciones SQL.
+
+El fichero quiz.sqlite guarda los datos de la base de datos creada.
+
+Instalacion de foreman:
+> npm install -g foreman
+
+Arranque de foreman:
+> nf start (en vez de foreman start)
+
+
+Desinstalar paquetes npm:
+> npm uninstall --save sequelize
+
+!!Si al hacer un push en Heroku me sale error, loguearme primero con "heroku login" y despues volver a hacer el push
+
