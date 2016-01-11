@@ -7,8 +7,9 @@ exports.load = function(req, res, next, quizId) {
 	models.Quiz.find(quizId).then(
 		function(quiz) {
 			if(quiz) {
+				req.quiz = quiz;
 				next();
-			} else { next(new Error('No existe quizID=' + quizId)); {
+			} else { next(new Error('No existe quizID=' + quizId)); }
 		}
 	).catch(function(error) { next(error);});
 };

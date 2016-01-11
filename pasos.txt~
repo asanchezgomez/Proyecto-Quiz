@@ -64,6 +64,3 @@ Desinstalar paquetes npm:
 
 !!Si al hacer un push en Heroku me sale error, loguearme primero con "heroku login" y despues volver a hacer el push
 
-Si con codigo se han insertado nuevos registros en la base de datos, hay que borrar el fichero quiz.sqlite y volver
-a lanzar "nf start" para que se creen los registros.
-
