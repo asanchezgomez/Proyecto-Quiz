@@ -3,6 +3,7 @@ var router = express.Router();
 
 //Cargamos el controlador del Quiz
 var quizController = require('../controllers/quiz_controller');
+var sessionController = require('../controllers/session_controller');
 
 /* GET home page. SOLO SE EJECUTA PARA TRANSACCIONES GET
 CON USE PODRIA RESPONDER A CUALQUIER PETICION (POST, GET, ETC)*/
@@ -12,6 +13,11 @@ router.get('/', function(req, res) {
 
 //Autoload de comandos con :quizId
 router.param('quizId',quizController.load); //autoload :quizId
+
+// Definicion de rutas de sesion
+router.get('/login', sessionController.new); //formulario login
+router.post('/login', sessionController.create); //crear sesion
+router.get('/logout', sessionController.destroy); //destruir sesion
 
 //Definicion de rutas de /quizes
 router.get('/quizes', quizController.index);
