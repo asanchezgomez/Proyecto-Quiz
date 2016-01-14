@@ -1,100 +1,44 @@
-//A este fichero se le llama desde el index.js
-
-var models = require('../models/models.js');
-
-// Autoload - factoriza el codigo si la ruta incluye :quizId
-exports.load = function(req, res, next, quizId) {
-	models.Quiz.findById(quizId).then(
-		function(quiz) {
-			if(quiz) {
-				req.quiz = quiz;
-				next();
-			} else { next(new Error('No existe quizID=' + quizId)); }
-		}
-	).catch(function(error) { next(error);});
-};
-
-
-//GET /index
-exports.index = function(req, res) {
-	// Renderizamos la nueva vista index.ejs
-	models.Quiz.findAll().then(function(quizes) {
-		res.render('quizes/index', {quizes: quizes, errors: []});
-	}).catch(function(error) { next(error);});
-};
-
-//GET /quizes/:id
-exports.show = function(req, res) {
-	res.render('quizes/show', {quiz: req.quiz, errors: []});
-};
-
-//GET /quizes/:id/answer
-exports.answer = function(req, res) {
-	var resultado = 'Incorrecto';
-	if(req.query.respuesta === req.quiz.respuesta){
-			resultado = 'Correcto';
+// MW de autorizacion de accesos HTTP restringidos
+exports.loginRequired = function(req, res, next) {
+	if (req.session.user){
+		next();
+	} else {
+		res.redirect('/login');
 	}
-	res.render('quizes/answer',{quiz: req.quiz, respuesta: resultado, errors: []});
 };
 
-//GET /quizes/new
+//GET /login -- Formulario de login
 exports.new = function(req, res) {
-	var quiz = models.Quiz.build( //crea objeto quiz
-		{pregunta: "Pregunta", respuesta: "Respuesta"}
-	);
-	res.render('quizes/new',{quiz: quiz, errors: []});
+	var errors = req.session.errors || {};
+	req.session.errors = {};
+	
+	res.render('sessions/new', {errors: errors});
 };
 
-//POST /quizes/create
+// POST /login --Crear la sesion
 exports.create = function(req, res) {
-	var quiz = models.Quiz.build(req.body.quiz);
-	// guarda en DB los campos pregunta y respuesta de quiz
-	quiz
-	.validate()
-	.then(function(err){
-			if(err) {
-				res.render('quizes/new', {quiz: quiz, errors: err.errors});
-			} else {
-				quiz
-				.save({fields:["pregunta","respuesta"]})
-				.then(function(){res.redirect('/quizes');})
-			}// Redireccion HTTP (URL relativo) a lista de preguntas
+	var login = req.body.login;
+	var password = req.body.password;
+
+	var userController = require('./user_controller');
+	userController.autenticar(login, password, function(error, user) {
+		if(error){ // si hay error retornamos mensajes de error de sesion
+			req.session.errors = [{"message": 'Se ha producido un error: '+error}];
+			res.redirect("/login");
+			return;
 		}
-	);
+
+		// Crear req.session.user y guardar campos id y username
+		// La sesion se define por la existencia de: req.session.user
+		req.session.user = {id:user.id, username:user.username};
+		res.redirect(req.session.redir.toString());// redireccion a path anterior a login
+	});
 };
 
-//GET /quizes/:id/edit
-exports.edit = function(req, res) {
-	var quiz = req.quiz; // autoload de instancia de quiz
-	res.render('quizes/edit',{quiz: quiz, errors: []});
-};
-
-// PUT /quizes/:id
-exports.update = function(req, res) {
-	// Extraemos la pregunta y la respuesta mandada por el usuario
-	req.quiz.pregunta = req.body.quiz.pregunta;
-	req.quiz.respuesta = req.body.quiz.respuesta;
-
-	req.quiz
-	.validate()
-	.then(
-		function (err) {
-			if (err) {
-				res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
-			} else {
-				req.quiz //save: guarda campos pregunta y respuesta en DB
-				.save( {fields: ["pregunta", "respuesta"]} )
-				.then( function(){ res.redirect("/quizes");}); 
-					// Redireccion HTTP a lisa de preguntas (URL relativo)
-			}
-		}
-	);
-};
-
-//DELETE /quizes/:id
+// DELETE /logout --Destruir sesion
 exports.destroy = function(req, res) {
-	console.log("DELETE");
-	req.quiz.destroy().then( function () {
-		res.redirect('/quizes');
-	}).catch(function(error){next(error)});
+	delete req.session.user;
+	res.redirect(req.session.redir.toString()); // redirect a path anterior a login
 };
+
+

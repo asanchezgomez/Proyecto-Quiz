@@ -1,3 +1,14 @@
+// MW de autorizacion de accesos HTTP restringidos
+exports.loginRequired = function(req, res, next) {
+	//Si esta logueado
+	if (req.session.user){
+		//Se pasa al siguiente middleware
+		next();
+	} else {
+		res.redirect('/login');
+	}
+};
+
 //GET /login -- Formulario de login
 exports.new = function(req, res) {
 	var errors = req.session.errors || {};
