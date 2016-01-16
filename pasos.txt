@@ -27,6 +27,9 @@ La instalacion de express-partials hay que hacerla estando dentro de la carpeta 
 
 Una vista se puede meter dentro de una anotacion de EJS <%- body %>
 
+NOTAAAA: hay cosas de la aplicacion que no se explican en el tutorial, debido a que lo debieron hacer en algun ejercicio de los que me salen
+bloqueados.
+
 
 En css, "*			{margin: 0; padding: 0;}" resetea todo el formato que puedan traer los navegadores a cero.
 h2 span, section h3		{display: none;} --> no muestra los elementos h2 span, section h3

@@ -70,3 +70,9 @@ a lanzar "nf start" para que se creen los registros.
 El Quiz 12 es el que me falla. El 11 lo tengo bien en github
 A lo mejor esta mal el paso del autoload (final de modul 7)
 
+
+FUNCIONAMIENTO APP:
+1. El usuario introduce una URL
+2. /routes/index.ejs la mapea, y ejecuta alguno de los metodos del quiz_controller.js
+3. El metodo del quiz_controller.js realiza la accion adecuada, que puede ser ir a otra URL, volviendo al paso1.
+
